@@ -1,0 +1,124 @@
+﻿@model FootballApiResponse[];
+
+@{
+    ViewData["Title"] = "Football Matches - NATIVE STATS";
+}
+
+<slide-toggle></slide-toggle>
+<div id="competitions-container">
+    @foreach (var competition in Model)
+    {
+        <div class="competition" data-competition-id="@competition.Competition.Id">
+            <h2 class="competition-title">@competition.Competition.Name</h2>
+            <div class="carousel">
+                @foreach (var match in competition.Matches)
+                {
+                    <div class="match-card">
+                        <div class="match-details">
+                            <p>@match.HomeTeam.Name vs @match.AwayTeam.Name</p>
+                            <p>@DateTime.Parse(match.UtcDate).ToString("hh:mm tt")</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<script async>
+
+        // Listen to the toggle-change event and dynamically update competitions
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleElement = document.querySelector("slide-toggle");
+
+        function fetchMatchesForCompetition(competitionId, isRecent, carousel) {
+            // Fetch data for the specified competition
+            fetch(`/api/football/matches?competitionsId=${competitionId}&isRecent=${isRecent}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch matches for competition ${competitionId}`);
+                    }
+                    return response.json(); // Parse the JSON response
+                })
+                .then((response) => {
+                    const competition = response.competition;
+                    // Ensure the response aligns with FootballApiResponse
+                    if (!competition) {
+                        throw new Error("Invalid response format");
+                    }
+
+                    // Clear the previous matches
+                    carousel.innerHTML = "";
+
+                    // Check if there are any matches
+                    if (response.matches.length === 0) {
+                        // Display "no matches" message
+                        const noMatchesMessage = document.createElement("div");
+                        noMatchesMessage.className = "no-matches";
+                        noMatchesMessage.textContent = "No matches available.";
+                        carousel.appendChild(noMatchesMessage);
+                        return;
+                    }
+
+                    // Populate the carousel with matches
+                    response.matches.forEach((match) => {
+                        const matchCard = document.createElement("div");
+                        matchCard.className = "match-card";
+
+                        matchCard.innerHTML = `
+                        <div class="match-details">
+                            <h3>${match.homeTeam.name} vs ${match.awayTeam.name}</h3>
+                            <p>${new Date(match.utcDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</p>
+                        </div>
+                    `;
+                        carousel.appendChild(matchCard);
+                    });
+                })
+                .catch((error) => {
+                    carousel.innerHTML = `<p>Failed to load matches.</p>`;
+                });
+        }
+
+
+            // Subscribe competitions to toggle-change events
+            function subscribeCompetitionsToToggle() {
+                const competitions = document.querySelectorAll(".competition");
+
+                competitions.forEach((competition) => {
+                    const competitionId = competition.getAttribute("data-competition-id");
+                    const carousel = competition.querySelector(".carousel");
+
+                    // Listen for the toggle-change event
+                    competition.addEventListener("toggle-change", (event) => {
+                        const isRecent = event.detail;
+                        fetchMatchesForCompetition(competitionId, isRecent, carousel);
+                    });
+                });
+            }
+
+            // Propagate toggle-change event to all competitions
+            function notifyCompetitions(isRecent) {
+                const toggleEvent = new CustomEvent("toggle-change", { detail: isRecent });
+                document.querySelectorAll(".competition").forEach((competition) => {
+                    competition.dispatchEvent(toggleEvent);
+                });
+            }
+
+            // Initialize competitions on toggle state change
+            toggleElement.addEventListener("toggle-change", (event) => {
+                const isRecent = event.detail;
+                notifyCompetitions(isRecent); // Notify all competitions
+            });
+
+            // Subscribe competitions to toggle-change events on page load
+            subscribeCompetitionsToToggle();
+        });
+
+</script>
+
+<script src="~/js/slide-toggle.js" async></script>

@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Tech assignment." />
+    <title>@ViewData["Title"] - ILIS.Football.Assignment</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/header.css" asp-append-version="true">
+    <style>
+        
+.container {
+    width: 100%;
+    padding: 0 16px;
+    box-sizing: border-box;
+}
+
+
+.mobile-only-message {
+    display: none;
+}
+
+
+body {
+    display: block;
+    background-color: #f77f00;
+    color: #333333;
+    font-family: monospace;
+}
+    </style>
+</head>
+<body>
+    @await Html.PartialAsync("_Header")
+
+    <div class="container mobile-app">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <div class="mobile-only-message">
+        Sorry, this application is optimized for mobile devices only.
+    </div>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

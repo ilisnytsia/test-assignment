@@ -1,0 +1,33 @@
+﻿using ILIS.Football.Assignment.Models;
+
+namespace ILIS.Football.Assignment.Infrastructure
+{
+    public interface IFootballGamesApiClient
+    {
+        Task<FootballApiResponse> GetMatchesAsync(string competitionsId, string dateFrom, string dateTo);
+    }
+
+    public class FootballGamesApiClient : IFootballGamesApiClient
+    {
+        private readonly HttpClient _httpClient;
+
+        public FootballGamesApiClient(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
+        public async Task<FootballApiResponse> GetMatchesAsync(string competitionsId, string dateFrom, string dateTo)
+        {
+            var url = $"competitions/{competitionsId}/matches?dateFrom={dateFrom}&dateTo={dateTo}";
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+            var result = System.Text.Json.JsonSerializer.Deserialize<FootballApiResponse>(json, new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            return result;
+        }
+    }
+}

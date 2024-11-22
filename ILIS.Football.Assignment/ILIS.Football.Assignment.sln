@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ILIS.Football.Assignment", "ILIS.Football.Assignment\ILIS.Football.Assignment.csproj", "{633A232F-6919-43AA-8EDD-012BCD2415BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{633A232F-6919-43AA-8EDD-012BCD2415BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{633A232F-6919-43AA-8EDD-012BCD2415BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{633A232F-6919-43AA-8EDD-012BCD2415BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{633A232F-6919-43AA-8EDD-012BCD2415BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C029F32-5466-4ADD-A53F-515AEA500543}
+	EndGlobalSection
+EndGlobal
