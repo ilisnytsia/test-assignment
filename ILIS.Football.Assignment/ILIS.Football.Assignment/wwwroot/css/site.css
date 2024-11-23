@@ -1,10 +1,14 @@
+.mobile-only-message {
+    display: none;
+}
+
 @media screen and (min-width: 769px) {
     body {
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
-        background-color: #f8f8f8; 
+        background-color: #f77f00;
         margin: 0;
         padding: 0;
     }
