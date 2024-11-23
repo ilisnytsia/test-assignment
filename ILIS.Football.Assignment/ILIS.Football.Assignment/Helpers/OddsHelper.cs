@@ -14,7 +14,7 @@
                 case 2: 
                     return Math.Round(_random.NextDouble() * (5.00 - 2.50) + 2.50, 2);
                 default:
-                    return 2.00;
+                    return 2.01;
             }
         }
     }
