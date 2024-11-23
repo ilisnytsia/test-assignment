@@ -15,7 +15,7 @@ namespace ILIS.Football.Assignment.Controllers
         }
 
         [HttpGet("matches")]
-        public async Task<IActionResult> Get([FromQuery] string competitionsId, bool isRecent)
+        public async Task<IActionResult> Get([FromQuery] int competitionsId, bool isRecent)
         {
             var matches = await _footballGamesService.GetMatchesAsync(competitionsId, isRecent);
 

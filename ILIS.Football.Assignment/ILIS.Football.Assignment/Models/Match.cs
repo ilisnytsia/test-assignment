@@ -26,6 +26,15 @@
     {
         public string Winner { get; set; }
         public string Duration { get; set; }
+
+        public FullTime FullTime { get; set; }
+    }
+
+    public class FullTime
+    {
+        public int? Home { get; set; }
+
+        public int? Away { get; set; }
     }
 
     public class Team

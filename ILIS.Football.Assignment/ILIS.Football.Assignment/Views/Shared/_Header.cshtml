@@ -8,17 +8,15 @@
             <div class="button-container">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <!-- Profile and Logout for logged-in users -->
-                    <a href="/Account/Profile" class="btn btn-outline-light">PROFILE</a>
+                    <a href="#" class="btn btn-outline-light">PROFILE</a>
                     <form method="post" asp-controller="Account" asp-action="Logout" class="logout-form">
                         <button type="submit" class="btn btn-danger">LOGOUT</button>
                     </form>
                 }
                 else
                 {
-                    <!-- Register and Login for guests -->
-                    <a href="/Account/Register" class="btn btn-outline-light">REGISTER</a>
-                    <a href="/Account/Login" class="btn btn-success">LOGIN</a>
+                    <a href="#" class="btn btn-outline-light">REGISTER</a>
+                    <a href="#" class="btn btn-success">LOGIN</a>
                 }
             </div>
     </nav>

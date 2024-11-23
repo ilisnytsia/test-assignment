@@ -7,11 +7,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddControllersWithViews();
-
+//Options
 builder.Services.Configure<FootballApiClientOptions>(
     builder.Configuration.GetSection("ApiClients:FootballApiClient")
 );
+
+builder.Services.Configure<CompetitionsConfig>(builder.Configuration.GetSection("Competitions"));
+
+//Infrastructure
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IMemoryCacheManager, MemoryCacheManager>();
+
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpClient<IFootballGamesApiClient, FootballGamesApiClient>((sp, client) =>
 {
@@ -20,15 +27,14 @@ builder.Services.AddHttpClient<IFootballGamesApiClient, FootballGamesApiClient>(
     client.DefaultRequestHeaders.Add("X-Auth-Token", options.Token);
 });
 
+//BL
 builder.Services.AddScoped<IFootballGamesService, FootballGamesService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

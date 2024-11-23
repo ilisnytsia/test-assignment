@@ -24,9 +24,22 @@ namespace ILIS.Football.Assignment.Controllers
             return View(competitionsWithMatches);
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        public async Task<IActionResult> GetCompetitionPartial(int competitionId, bool isRecent)
         {
-            return View();
+            var competition = await _footballGamesService.GetMatchesAsync(competitionId, isRecent);
+
+            if (competition == null)
+            {
+                return NotFound();
+            }
+
+            if (isRecent)
+            {
+                competition.Matches.Sort((x, y) => y.UtcDate.CompareTo(x.UtcDate));
+            }
+
+            return PartialView("_CompetitionPartial", competition);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
