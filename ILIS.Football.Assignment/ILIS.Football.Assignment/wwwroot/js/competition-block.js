@@ -2,6 +2,8 @@
     constructor() {
         super();
         this.matchesData = [];
+        this.currentIndex = 0; 
+        this.matchesPerBatch = 3;
         this.isConnectedCallbackExecuted = false;
     }
 
@@ -13,14 +15,13 @@
         this.isConnectedCallbackExecuted = true;
         this.loadInitialMatches();
         this.render();
+        this.initializeLazyLoading();
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        if (!this.isConnectedCallbackExecuted) return; 
+        if (!this.isConnectedCallbackExecuted) return;
 
-        if (name === "is-recent" && oldValue !== newValue) {
-            this.fetchData(); 
-        } else if (name === "matches") {
+        if (name === "matches") {
             this.loadInitialMatches();
             this.render();
         }
@@ -33,29 +34,6 @@
         } catch (error) {
             console.error("Invalid JSON for matches:", error);
             this.matchesData = [];
-        }
-    }
-
-    async fetchData() {
-        const competitionId = this.getAttribute("competition-id");
-        const isRecent = this.getAttribute("is-recent") === "true";
-
-        if (!competitionId) {
-            console.error("Competition ID is missing for competition-block");
-            return;
-        }
-
-        try {
-            const response = await fetch(`/api/football/matches?competitionsId=${competitionId}&isRecent=${isRecent}`);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch data for competition ID ${competitionId}`);
-            }
-
-            const data = await response.json();
-            this.matchesData = data.matches || [];
-            this.render();
-        } catch (error) {
-            console.error(`Error fetching data for competition ID ${competitionId}:`, error);
         }
     }
 
@@ -74,12 +52,46 @@
         const carousel = this.querySelector(".carousel");
         if (!carousel) return;
 
-        carousel.innerHTML = ""; 
-        this.matchesData.forEach(match => {
+        const fragment = document.createDocumentFragment();
+
+        for (let i = this.currentIndex; i < this.currentIndex + this.matchesPerBatch; i++) {
+            if (i >= this.matchesData.length) break;
+
+            const match = this.matchesData[i];
             const matchCard = document.createElement("match-card");
             matchCard.setAttribute("match-data", JSON.stringify(match));
-            carousel.appendChild(matchCard);
+            fragment.appendChild(matchCard);
+        }
+
+        carousel.appendChild(fragment);
+
+        this.currentIndex += this.matchesPerBatch;
+    }
+
+    initializeLazyLoading() {
+        const carousel = this.querySelector(".carousel");
+        if (!carousel) return;
+
+        const observer = new IntersectionObserver(entries => {
+            const lastEntry = entries[0];
+            if (lastEntry.isIntersecting) {
+                this.renderMatches();
+
+                if (this.currentIndex >= this.matchesData.length) {
+                    observer.disconnect();
+                }
+            }
         });
+
+        const observeLastElement = () => {
+            const lastElement = carousel.lastElementChild;
+            if (lastElement) observer.observe(lastElement);
+        };
+
+        observeLastElement();
+
+        const mutationObserver = new MutationObserver(observeLastElement);
+        mutationObserver.observe(carousel, { childList: true });
     }
 
     getStyles() {
@@ -95,8 +107,14 @@
                     display: none;
                 }
                 .match-card {
-                    flex: 0 0 auto;
+                    flex: 0 0 calc(100% / 3 - 10px); /* Adjust width for 3 cards per view */
                     margin-right: 15px;
+                    background: #ff5733;
+                    color: #fff;
+                    border-radius: 10px;
+                    padding: 10px;
+                    text-align: center;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
                 }
             </style>
         `;

@@ -38,22 +38,33 @@ namespace ILIS.Football.Assignment.BusinessLogic
             }
 
             //TODO: use dynamic dates or paging
-            var dateFrom = isRecent ? DateTime.Now.AddDays(-5).ToString("yyyy-MM-dd") :DateTime.Now.ToString("yyyy-MM-dd");
-            var dateTo = isRecent ? DateTime.Now.ToString("yyyy-MM-dd") : DateTime.Now.AddDays(5).ToString("yyyy-MM-dd");
+            var dateFrom = isRecent ? DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd") :DateTime.Now.ToString("yyyy-MM-dd");
+            var dateTo = isRecent ? DateTime.Now.ToString("yyyy-MM-dd") : DateTime.Now.AddDays(30).ToString("yyyy-MM-dd");
             var status = isRecent ? "FINISHED" : "SCHEDULED,LIVE";
 
             var response = await _footballGamesApiClient.GetMatchesAsync(competitionsId, dateFrom, dateTo, status);
             if(response != null)
             {
-                //TODO : Define proper response models & use mapper
-                CompetitionResponse viewModel = new CompetitionResponse()
+                if (isRecent)
                 {
-                    Competition = response.Competition,
-                    Matches = response.Matches.AsParallel().Select(x => new MatchResponse(x)).ToList(),
-                };
-                _memoryCacheManager.Set(key, viewModel, TimeSpan.FromMinutes(1));
-
-                return viewModel;
+                    CompetitionResponse viewModel = new CompetitionResponse()
+                    {
+                        Competition = response.Competition,
+                        Matches = response.Matches.AsParallel().Select(x => new MatchResponse(x)).OrderByDescending(x => x.UtcDate).ToList(),
+                    };
+                    _memoryCacheManager.Set(key, viewModel, TimeSpan.FromMinutes(1));
+                    return viewModel;
+                }
+                else
+                {
+                    CompetitionResponse viewModel = new CompetitionResponse()
+                    {
+                        Competition = response.Competition,
+                        Matches = response.Matches.AsParallel().Select(x => new MatchResponse(x)).ToList(),
+                    };
+                    _memoryCacheManager.Set(key, viewModel, TimeSpan.FromMinutes(1));
+                    return viewModel;
+                }                             
             }
 
             return null;

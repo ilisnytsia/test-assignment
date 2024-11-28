@@ -22,7 +22,7 @@ namespace ILIS.Football.Assignment.Controllers
             var userAgent = Request.Headers["User-Agent"].ToString();
             if (userAgent.Contains("Mobile"))
             {
-                var competitionsWithMatches = await _footballGamesService.GetAllMatchesAsync(false);
+                var competitionsWithMatches = (await _footballGamesService.GetAllMatchesAsync(false)).Take(2).ToArray();
 
                 return View(competitionsWithMatches);
             }

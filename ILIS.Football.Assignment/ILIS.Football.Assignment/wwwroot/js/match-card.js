@@ -95,7 +95,7 @@
                     vs
                     <p>${data.awayTeam.name}</p>
                 </div>
-                <div class="card-image" style="background-image: url('${data.homeTeam.crest}');"></div>
+              <img class="card-image" src="${data.homeTeam.crest}" alt="${data.homeTeam.name}" loading="lazy" />
                 ${data.score?.winner
                 ? `<div class="score">${data.score.fullTime.home} : ${data.score.fullTime.away}</div>`
                 : `<div class="odds">
