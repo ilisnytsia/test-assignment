@@ -19,27 +19,15 @@ namespace ILIS.Football.Assignment.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var competitionsWithMatches = await _footballGamesService.GetAllMatchesAsync(false);
-
-            return View(competitionsWithMatches);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetCompetitionPartial(int competitionId, bool isRecent)
-        {
-            var competition = await _footballGamesService.GetMatchesAsync(competitionId, isRecent);
-
-            if (competition == null)
+            var userAgent = Request.Headers["User-Agent"].ToString();
+            if (userAgent.Contains("Mobile"))
             {
-                return NotFound();
+                var competitionsWithMatches = await _footballGamesService.GetAllMatchesAsync(false);
+
+                return View(competitionsWithMatches);
             }
 
-            if (isRecent)
-            {
-                competition.Matches.Sort((x, y) => y.UtcDate.CompareTo(x.UtcDate));
-            }
-
-            return PartialView("_CompetitionPartial", competition);
+            return Content("Mobile access Only");            
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

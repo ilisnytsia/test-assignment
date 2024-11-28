@@ -1,4 +1,6 @@
-﻿@model FootballApiResponse[];
+﻿@using ILIS.Football.Assignment.Helpers
+@using ILIS.Football.Assignment.Models.ViewModels
+@model CompetitionResponse[];
 
 @{
     ViewData["Title"] = "Football Matches - NATIVE STATS";
@@ -10,38 +12,36 @@
 <div id="competitions-container">
     @foreach (var competition in Model)
     {
-        <partial name="_CompetitionPartial" model="competition" />
+        <h2 class="competition-title">@competition.Competition.Name</h2>
+        <competition-block competition-id="@competition.Competition.Id"
+                           competition-emblem="@competition.Competition.Emblem"
+                           matches='@JsonHelper.SerializeCamelCase(competition.Matches)'>
+        </competition-block>
     }
 </div>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const toggle = document.querySelector("slide-toggle");
         const container = document.getElementById("competitions-container");
+        let currentToggleState = null;
 
         toggle.addEventListener("toggle-change", (event) => {
             const isRecent = event.detail;
 
-            const competitions = container.querySelectorAll(".competition");
-            competitions.forEach(competition => {
-                const competitionId = competition.dataset.competitionId;
-
-                fetch(`/Home/GetCompetitionPartial?competitionId=${competitionId}&isRecent=${isRecent}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error("Failed to load competition partial view");
-                        }
-                        return response.text(); 
-                    })
-                    .then(html => {
-                        competition.outerHTML = html; 
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
-            });
+            if (currentToggleState !== isRecent) {
+                currentToggleState = isRecent; 
+                const competitionBlocks = container.querySelectorAll("competition-block");
+                competitionBlocks.forEach(block => {
+                    block.setAttribute("is-recent", isRecent);
+                });
+            }
         });
     });
 </script>
 
-<script src="~/js/slide-toggle.js" async></script>
+
+<script src="~/js/slide-toggle.js" defer></script>
+<script src="~/js/competition-block.js" defer></script>
+<script src="~/js/match-card.js" defer></script>

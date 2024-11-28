@@ -4,12 +4,52 @@
 
         this.attachShadow({ mode: "open" });
 
-        const link = document.createElement("link");
-        link.setAttribute("rel", "stylesheet");
-        link.setAttribute("href", "/css/toggle-switch.css");
-
         const container = document.createElement("div");
         container.innerHTML = `
+         <style>
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2em;
+}
+
+.toggle {
+    position: relative;
+    width: 50px;
+    height: 24px;
+    background-color: #ccc;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .toggle.active {
+        background-color: #3f51b5;
+    }
+
+.toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    transition: left 0.3s ease;
+}
+
+.toggle.active .toggle-thumb {
+    left: 26px;
+}
+
+.label {
+    font-size: 20px;
+    color: #333333;
+    font-family: monospace;
+}
+
+         </style>
             <div class="toggle-container">
                 <div class="toggle">
                     <div class="toggle-thumb"></div>
@@ -18,7 +58,6 @@
             </div>
         `;
 
-        this.shadowRoot.appendChild(link);
         this.shadowRoot.appendChild(container);
     }
     connectedCallback() {

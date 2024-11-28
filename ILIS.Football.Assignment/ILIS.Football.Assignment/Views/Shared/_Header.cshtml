@@ -1,4 +1,90 @@
 ﻿<header>
+    <style>
+        body{
+            display: block;
+            background-color: #f77f00;
+            color: #333333;
+            font-family: monospace;
+        }
+        .custom-navbar {
+            color: white;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            color: #333333;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 50%;
+            padding: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+        .btn-outline-light {
+            color: #333333;
+            border: 2px solid #333333;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+            .btn-outline-light:hover {
+                background-color: white;
+                color: #ff5733;
+            }
+
+        .btn-success {
+            background-color: #218838;
+            color: #fff;
+        }
+
+            .btn-success:hover {
+                background-color: #1e7e34;
+            }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+            .btn-danger:hover {
+                background-color: #c82333;
+            }
+
+        .logout-form {
+            display: inline;
+        }
+
+        .disclaimer {
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+    </style>
     <nav class="custom-navbar">
 
             <div class="header-title">

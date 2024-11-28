@@ -17,9 +17,15 @@ namespace ILIS.Football.Assignment.Controllers
         [HttpGet("matches")]
         public async Task<IActionResult> Get([FromQuery] int competitionsId, bool isRecent)
         {
-            var matches = await _footballGamesService.GetMatchesAsync(competitionsId, isRecent);
+            var competition = await _footballGamesService.GetMatchesAsync(competitionsId, isRecent);
 
-            return Ok(matches);
+            if (isRecent)
+            {
+                competition.Matches.Sort((x, y) => y.UtcDate.CompareTo(x.UtcDate));
+            }
+
+
+            return Ok(competition);
         }
 
         [HttpGet("matches/all")]

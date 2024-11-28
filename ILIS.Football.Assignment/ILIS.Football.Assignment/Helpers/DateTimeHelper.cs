@@ -1,9 +1,10 @@
 ﻿namespace ILIS.Football.Assignment.Helpers
 {
-    public class DateTimeHelper
+    public static class DateTimeHelper
     {
-        public static string FormatDateTime(DateTime utcDate)
+        public static string FormatDateTime(this string utcDateStr)
         {
+            var utcDate = DateTime.Parse(utcDateStr);
             var localDate = utcDate.ToLocalTime();
             var now = DateTime.Now;
 
